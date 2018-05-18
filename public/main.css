@@ -1,0 +1,18 @@
+canvas {
+    border: 1px;
+    border-style: solid;
+}
+
+#log {
+    font-family: monospace;
+}
+
+.main {
+    padding-top: 30px;
+}
+
+td, tr, th {
+    padding: 5px;
+    border: 1px;
+    border-style: solid;
+}
