@@ -1,12 +1,39 @@
 export default class IZ80Registers {
+    public flags: number = 0;
+    public interruptsEnabled: boolean;
     private regA: number = 0;
-    private regF: number = 0;
     private regB: number = 0;
     private regC: number = 0;
     private regD: number = 0;
     private regE: number = 0;
     private regH: number = 0;
     private regL: number = 0;
+
+    // C flag
+    get carry() { return this.flags & 0x1; }
+    set carry(value: number | boolean) { this.flags |= (!!value) ? 1 : 0; }
+
+    // N flag
+    get isSub() { return !!(this.flags & 0x2); }
+    set isSub(value: number | boolean) { this.flags |= ((!!value) ? 1 : 0) << 1; }
+
+    // P/V flag
+    get parity() { return !!(this.flags & 0x4); }
+    set parity(value: number | boolean) { this.flags |= ((!!value) ? 1 : 0) << 2; }
+
+    // H flag
+    get halfCarry() { return !!(this.flags & 0x8); }
+    set halfCarry(value: number | boolean) { this.flags |= ((!!value) ? 1 : 0) << 3; }
+
+    // Z flag
+    get zero() { return !!(this.flags & 0x32); }
+    set zero(value: number | boolean) { this.flags |= ((!!value) ? 1 : 0) << 5; }
+
+    // S flag
+    get sign() { return !!(this.flags & 0x64); }
+    set sign(value: number | boolean) { this.flags |= ((!!value) ? 1 : 0) << 7; }
+
+    // Registers
 
     get A() { return this.regA; }
     set A(value: number) {
@@ -64,10 +91,10 @@ export default class IZ80Registers {
         this.E = value & 0x0F;
     }
 
-    get HL() { return ((this.D << 8) & this.E); }
+    get HL() { return ((this.H << 8) & this.L); }
     set HL(value: number) {
         console.assert(value <= 0xFFFF, "HL Value exceeds 16 bits");
-        this.D = value & 0xF0;
-        this.E = value & 0x0F;
+        this.H = value & 0xF0;
+        this.L = value & 0x0F;
     }
 }

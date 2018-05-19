@@ -1,23 +1,30 @@
 
 export default class RAM extends Uint8ClampedArray {
 
-    constructor(array: number[]) {
-        super(array);
+    constructor(size) {
+        super(size);
     }
 
-    public read8(address: number) {
+    public read8(address: number, signed = false) {
         if (address > this.length) {
             throw Error(`Address 0x${address.toString(16)} Out of Bounds`);
         }
-        return this[address];
+        let val = this[address];
+        if (signed && !!(val & 0x80)) {
+            val = -((~val + 1) & 0xFF);
+        }
+        return val;
     }
 
-    public read16(address: number) {
+    public read16(address: number, signed = false) {
         if (address > this.length || (address + 1) > this.length) {
             throw Error(`Address 0x${address.toString(16)} Out of Bounds`);
         }
-        const val = (this[address + 1] << 8) | this[address];
-        console.log(`read16: ${((this[address + 1] << 8)).toString(16)} | ${this[address].toString(16)} = ${val.toString(16)}`);
+        let val = (this[address + 1] << 8) | this[address];
+        if (signed && !!(val & 0x8000)) {
+            val = -((~val + 1) & 0xFFFF);
+        }
+        console.log(`read16: ${((this[address + 1] << 8)).toString(16)} | ${this[address].toString(16)} = ${val.toString(16)} or ${val}`);
         return val;
     }
 

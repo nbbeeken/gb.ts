@@ -21,8 +21,13 @@ const bios = new RAM([
 ]);
 
 function main() {
+    const ram = new RAM(0xFFFF + 1);
 
-    const cpu = new Z80(bios);
+    for (let i = 0; i < bios.length; i++) {
+        ram[i] = bios[i];
+    }
+
+    const cpu = new Z80(ram);
     cpu.execute();
     console.log("done");
 }

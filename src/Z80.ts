@@ -9,7 +9,7 @@ enum Z80RegIndex {
 
 export default class Z80 {
 
-    public registers: [Z80Registers, Z80Registers];
+    public registerSet = [new Z80Registers(), new Z80Registers()];
     public regIndex: Z80RegIndex;
 
     public indexX: number;
@@ -24,16 +24,25 @@ export default class Z80 {
 
     constructor(public ram: RAM) {
         this.programCounter = 0;
-        this.registers = [new Z80Registers(), new Z80Registers()];
         this.regIndex = Z80RegIndex.main;
     }
 
+    /**
+     * Execute code in RAM
+     * note the programCounter++, all instructions expect pc to be pointing at
+     * desired immediate if one is expected
+     */
     public execute() {
         console.log(`ram len: ${this.ram.length}`);
         while (true) {
-            const byte = this.ram[this.pc]; // Fetch
+            let byte = this.ram.read8(this.programCounter++); // Fetch
 
             if (!byte) return; // done
+
+            if (byte === 0xCB) {
+                byte <<= 8;
+                byte |= this.ram.read8(this.programCounter++);
+            }
 
             console.log(`byte 0x${byte.toString(16)}`);
             Z80Instructions[byte](this); // Execute
@@ -45,6 +54,10 @@ export default class Z80 {
     get pc() {
         console.assert(this.programCounter < this.ram.length);
         return this.programCounter;
+    }
+
+    get registers() {
+        return this.registerSet[this.regIndex];
     }
 
 }
