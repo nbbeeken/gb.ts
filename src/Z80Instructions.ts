@@ -10,7 +10,6 @@ export default class Z80Instructions {
      */
     public static 0x00 = (cpu: Z80) => {
         if (logInstruction) console.log("NOP       - No Operation");
-        throw Error("Not implemented");
     }
 
     /**
@@ -155,7 +154,7 @@ export default class Z80Instructions {
      */
     public static 0x10 = (cpu: Z80) => {
         if (logInstruction) console.log("STOP      - Stop processor");
-        throw Error("Not implemented");
+        cpu.stop = true;
     }
 
     /**
@@ -661,7 +660,8 @@ export default class Z80Instructions {
      */
     public static 0x47 = (cpu: Z80) => {
         if (logInstruction) console.log("LD B,A    - Copy A to B");
-        throw Error("Not implemented");
+        cpu.registers.B = cpu.registers.A;
+        cpu.programCounter++;
     }
 
     /**
@@ -1922,7 +1922,7 @@ export default class Z80Instructions {
      */
     public static 0xD3 = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -1994,7 +1994,7 @@ export default class Z80Instructions {
      */
     public static 0xDB = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2012,7 +2012,7 @@ export default class Z80Instructions {
      */
     public static 0xDD = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2067,7 +2067,7 @@ export default class Z80Instructions {
      */
     public static 0xE3 = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2076,7 +2076,7 @@ export default class Z80Instructions {
      */
     public static 0xE4 = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2139,7 +2139,7 @@ export default class Z80Instructions {
      */
     public static 0xEB = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2148,7 +2148,7 @@ export default class Z80Instructions {
      */
     public static 0xEC = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2157,7 +2157,7 @@ export default class Z80Instructions {
      */
     public static 0xED = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2202,7 +2202,7 @@ export default class Z80Instructions {
      */
     public static 0xF2 = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
@@ -2220,7 +2220,7 @@ export default class Z80Instructions {
      */
     public static 0xF4 = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPUd");
     }
 
     /**
@@ -2292,7 +2292,8 @@ export default class Z80Instructions {
      */
     public static 0xFC = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        // throw Error("Operation removed in this CPU");
+        Z80Instructions[0](cpu);
     }
 
     /**
@@ -2301,7 +2302,7 @@ export default class Z80Instructions {
      */
     public static 0xFD = (cpu: Z80) => {
         if (logInstruction) console.log("XX        - Operation removed in this CPU");
-        throw Error("Not implemented");
+        throw Error("Operation removed in this CPU");
     }
 
     /**
