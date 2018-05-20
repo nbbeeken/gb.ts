@@ -1,52 +1,4 @@
 
-function fixRegRequest(property): string {
-    if (property.length === 2) {
-        switch (property) {
-            case "00": property = "BC"; break;
-            case "01": property = "DE"; break;
-            case "10": property = "HL"; break;
-            case "11": property = "sp"; break;
-            default: throw Error("bad prop");
-        }
-    }
-    if (!isNaN(property)) {
-        let base;
-        if (property.startsWith("0b")) {
-            // Binary
-            property = property.slice(2);
-            base = 2;
-        } else if (property.startsWith("0x")) {
-            // Hex
-            property = property.slice(2);
-            base = 16;
-        } else {
-            // Decimal
-            base = 10;
-        }
-        switch (parseInt(property, base)) {
-            case 0b111: property = "A"; break;
-            case 0b000: property = "B"; break;
-            case 0b001: property = "C"; break;
-            case 0b010: property = "D"; break;
-            case 0b011: property = "E"; break;
-            case 0b100: property = "H"; break;
-            case 0b101: property = "L"; break;
-            default: throw Error(`Unsupported Reg ${property}`);
-        }
-    }
-    return property;
-}
-
-export const registerProxy = {
-    get: (target, property) => {
-        return target[fixRegRequest(property)];
-    },
-    set: (target, property, value) => {
-        property = fixRegRequest(property);
-        return target[fixRegRequest(property)] = value;
-    },
-};
-
 export default class Z80Registers {
 
     public  flags: number;
@@ -145,31 +97,38 @@ export default class Z80Registers {
         this.regL = value & 0xFF;
     }
 
-    get BC() { return ((this.B << 8) & this.C); }
+    get AF() { return ((this.A << 8) | this.flags); }
+    set AF(value: number) {
+        console.assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
+        this.A = (value & 0xFF00) >> 8;
+        this.flags = value & 0x00FF;
+    }
+
+    get BC() { return ((this.B << 8) | this.C); }
     set BC(value: number) {
         console.assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
-        this.B = value & 0xFF00;
+        this.B = (value & 0xFF00) >> 8;
         this.C = value & 0x00FF;
     }
 
-    get DE() { return ((this.D << 8) & this.E); }
+    get DE() { return ((this.D << 8) | this.E); }
     set DE(value: number) {
         console.assert(value <= 0xFFFF, "DE Value exceeds 16 bits");
-        this.D = value & 0xFF00;
+        this.D = (value & 0xFF00) >> 8;
         this.E = value & 0x00FF;
     }
 
-    get HL() { return ((this.H << 8) & this.L); }
+    get HL() { return ((this.H << 8) | this.L); }
     set HL(value: number) {
         console.assert(value <= 0xFFFF, "HL Value exceeds 16 bits");
-        this.H = value & 0xFF00;
+        this.H = (value & 0xFF00) >> 8;
         this.L = value & 0x00FF;
     }
 
     // TODO: Add sanity checks
-    get pc() { return this.programCounter; }
-    set pc(value: number) { this.programCounter = value; }
+    get PC() { return this.programCounter; }
+    set PC(value: number) { this.programCounter = value; }
 
-    get sp() { return this.stackPointer; }
-    set sp(value: number) { this.stackPointer = value; }
+    get SP() { return this.stackPointer; }
+    set SP(value: number) { this.stackPointer = value; }
 }

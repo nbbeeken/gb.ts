@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/core-js": "^0.9.46",
     "awesome-typescript-loader": "^5.0.0",
     "npx": "^10.2.0",
     "tslint": "^5.10.0",
@@ -22,8 +21,6 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "core-js": "^2.5.6",
-    "immutable": "^3.8.2",
     "rxjs": "^6.1.0"
   }
 }
