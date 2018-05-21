@@ -1,9 +1,12 @@
 {
-  "name": "nesjs",
+  "name": "gb.js",
   "version": "1.0.0",
-  "description": "NES Emulator",
+  "description": "Gameboy Emulator",
   "main": "index.js",
   "scripts": {
+    "generateInsructions": "node ./scripts/instructionGen.js",
+    "prestart": "npm run generateInsructions",
+    "prebuild": "npm run generateInsructions",
     "start": "npx webpack-dev-server --mode=development --hot",
     "build": "npx webpack --mode=development"
   },

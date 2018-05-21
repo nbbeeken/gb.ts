@@ -1,6 +1,5 @@
 import RAM from "./RAM";
 import { Z80Instructions } from "./Z80Instructions";
-import { Instruction } from "./Z80Instructions";
 import Z80Registers from "./Z80Registers";
 
 export default class Z80 {
