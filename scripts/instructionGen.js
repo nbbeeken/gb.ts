@@ -12,7 +12,7 @@ const REGS = {
     '101': 'L',
 };
 
-const DD_REGS = {
+const DD_REGS = { // same as SS
     '00': 'BC',
     '01': 'DE',
     '10': 'HL',
@@ -192,7 +192,235 @@ const printfuncs = [
             array.push(format(text, reg, num, reg, reg, reg, reg))
         }
         return array;
-    }
+    },
+    function adc08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Adc %s to A (reg form)",
+            0b10001_%s,
+            "adc A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A + cur%s + ((cpu.registers.carry) ? 1 : 0);
+
+                cpu.registers.carry = result > 0xFF;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = result > 0x0F;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function sub08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Sub %s from A",
+            0b10010_%s,
+            "sub A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A - cur%s;
+
+                cpu.registers.carry = result > 0xFF;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = result > 0x0F;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function subc08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Sub %s from A",
+            0b10011_%s,
+            "sub A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A - cur%s - ((cpu.registers.carry) ? 1 : 0);
+
+                cpu.registers.carry = result > 0xFF;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = result > 0x0F;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function and08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "And %s with A",
+            0b10100_%s,
+            "and A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A & cur%s;
+
+                cpu.registers.carry = false;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = true;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function or08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Or %s with A",
+            0b10110_%s,
+            "or A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A | cur%s;
+
+                cpu.registers.carry = false;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = false;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function xor08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Xor %s with A",
+            0b10101_%s,
+            "xor A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A ^ cur%s;
+
+                cpu.registers.carry = false;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = false;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function cp08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "cp %s against A",
+            0b10111_%s,
+            "cp A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A === cur%s;
+
+                cpu.registers.carry = false;
+                cpu.registers.halfCarry = false;
+
+                cpu.registers.zero = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function inc08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "increment %s",
+            0b00_%s_100,
+            "inc %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                cpu.registers.%s += 1;
+                cpu.registers.zero = cpu.registers.%s === 0;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg))
+        }
+        return array;
+    },
+    function dec08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "decrement %s",
+            0b00_%s_101,
+            "dec %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                cpu.registers.%s -= 1;
+                cpu.registers.zero = cpu.registers.%s === 0;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg))
+        }
+        return array;
+    },
 ];
 
 function main() {

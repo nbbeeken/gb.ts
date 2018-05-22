@@ -24,5 +24,6 @@ export default class Z80 {
             s.add(instruction.opcode);
         }
         console.dir(s);
+        console.log(Z80Instructions.length);
     }
 }
