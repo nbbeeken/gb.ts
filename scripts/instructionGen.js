@@ -166,6 +166,33 @@ const printfuncs = [
         }
         return array;
     },
+    function add08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "Add %s to A",
+            0b10000_%s,
+            "add A, %s", Z80InstructionType.MATH08BIT, 1,
+
+            (cpu) => {
+                const A = cpu.registers.A;
+                const cur%s = cpu.registers.%s;
+                const result = A + cur%s;
+
+                cpu.registers.carry = result > 0xFF;
+                cpu.registers.zero = result === 0x00;
+                cpu.registers.halfCarry = result > 0x0F;
+
+                cpu.registers.A = result;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    }
 ];
 
 function main() {
