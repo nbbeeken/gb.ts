@@ -421,6 +421,113 @@ const printfuncs = [
         }
         return array;
     },
+    function add16bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "add %s to HL",
+            0b00_%s_1001,
+            "add HL, %s", Z80InstructionType.MATH16BIT, 1,
+
+            (cpu) => {
+                const HL = cpu.registers.HL;
+                const cur%s = cpu.registers.%s;
+                const result = HL + cur%s;
+
+                cpu.registers.carry = result > 0xFFFF;
+                cpu.registers.zero = result === 0x0000;
+                cpu.registers.halfCarry = (HL & 0x0400) && (cur%s & 0x0400);
+
+                cpu.registers.HL = result;
+            },
+        ),`;
+
+        for (const num in DD_REGS) {
+            const reg = DD_REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function inc16bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "increment %s",
+            0b00_%s_0011,
+            "inc %s", Z80InstructionType.MATH16BIT, 1,
+
+            (cpu) => {
+                cpu.registers.%s += 1;
+            },
+        ),`;
+
+        for (const num in DD_REGS) {
+            const reg = DD_REGS[num];
+            array.push(format(text, reg, num, reg, reg))
+        }
+        return array;
+    },
+    function dec16bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "decrement %s",
+            0b00_%s_1011,
+            "dec %s", Z80InstructionType.MATH16BIT, 1,
+
+            (cpu) => {
+                cpu.registers.%s -= 1;
+            },
+        ),`;
+
+        for (const num in DD_REGS) {
+            const reg = DD_REGS[num];
+            array.push(format(text, reg, num, reg, reg))
+        }
+        return array;
+    },
+    function rlc08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "rotate left %s",
+            0xCB00 | 0b00000_%s,
+            "rlc %s", Z80InstructionType.SHIFTBITS, 2,
+
+            (cpu) => {
+                cpu.registers.carry = !!(cpu.registers.%s & 0x80);
+                cpu.registers.%s <<= 1;
+                cpu.registers.%s |= cpu.registers.carry ? 0x1 : 0x0;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    },
+    function rl08bit() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "rotate left %s through carry",
+            0xCB00 | 0b00010_%s,
+            "rl %s", Z80InstructionType.SHIFTBITS, 2,
+
+            (cpu) => {
+                const setCarry = !!(cpu.registers.%s & 0x80);
+                cpu.registers.%s <<= 1;
+                cpu.registers.%s |= cpu.registers.carry ? 0x1 : 0x0;
+            },
+        ),`;
+
+        for (const num in REGS) {
+            const reg = REGS[num];
+            array.push(format(text, reg, num, reg, reg, reg, reg))
+        }
+        return array;
+    }
 ];
 
 function main() {

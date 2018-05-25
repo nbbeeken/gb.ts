@@ -3,8 +3,9 @@
     "outDir": "public",
     "noImplicitAny": false,
     "sourceMap": true,
-    "module": "es6",
-    "target": "es6",
+    "module": "commonjs",
+    "target": "es5",
+    "experimentalDecorators": true,
     "lib": [
       "dom",
       "es6",
