@@ -5,11 +5,13 @@
     "sourceMap": true,
     "module": "commonjs",
     "target": "es5",
+    "downlevelIteration": true,
     "experimentalDecorators": true,
     "lib": [
       "dom",
       "es6",
-      "es2015.iterable"
+      "es2015.iterable",
+      "es2017.string"
     ],
 
     "moduleResolution": "node",

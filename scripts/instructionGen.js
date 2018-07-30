@@ -527,6 +527,24 @@ const printfuncs = [
             array.push(format(text, reg, num, reg, reg, reg, reg))
         }
         return array;
+    },
+    function reset() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "call reset routine 0b%s",
+            0b11_%s_111,
+            "rst 0b%s", Z80InstructionType.JUMPCOMMD, 1,
+
+            (cpu) => {
+                cpu.resetRoutines[0b%s]();
+            },
+        ),`;
+        const locations = ['000', '001', '010', '011', '100', '101', '110', '111'];
+        for (const num of locations) {
+            array.push(format(text, num, num, num, num))
+        }
+        return array;
     }
 ];
 

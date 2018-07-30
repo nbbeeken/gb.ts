@@ -171,6 +171,18 @@ const load8bitInstructions = [
             cpu.registers.HL -= 1;
         },
     ),
+
+    new Instruction(
+        "Compare next 8 bits to Accumulator",
+        0b1111_1110,
+        "cp n", Z80InstructionType.LOAD08BIT, 2,
+        (cpu) => {
+            // TODO: correctness check needed
+            const n = cpu.ram.read8(cpu.registers.PC);
+            const result = (cpu.registers.A === n) ? 0 : 1;
+            cpu.registers.zero = result;
+        },
+    ),
 ];
 
 const load16bitInstructions = [
@@ -186,8 +198,18 @@ const load16bitInstructions = [
     ),
 ];
 
+const specialInstructions = [
+    new Instruction(
+        "nop",
+        0b0000_0000,
+        "nop", null, 1,
+        (cpu) => { return; },
+    ),
+];
+
 export const Z80Instructions = [
     ...GeneratedInstructions,
     ...load8bitInstructions,
     ...load16bitInstructions,
+    ...specialInstructions,
 ];

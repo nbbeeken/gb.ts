@@ -1,8 +1,13 @@
 
+function assert(condition?: boolean, message?: string) {
+    if (condition)
+        console.log("registers:", message);
+}
+
 export default class Z80Registers {
 
-    public  flags: number;
-    public  interruptsEnabled: boolean;
+    public flags: number;
+    public interruptsEnabled: boolean;
     private regA: number;
     private regB: number;
     private regC: number;
@@ -57,70 +62,70 @@ export default class Z80Registers {
 
     get A() { return this.regA; }
     set A(value: number) {
-        console.assert(value <= 0xFF, "A Value exceeds 8 bits");
+        assert(value <= 0xFF, "A Value exceeds 8 bits");
         this.regA = value & 0xFF;
     }
 
     get B() { return this.regB; }
     set B(value: number) {
-        console.assert(value <= 0xFF, "B Value exceeds 8 bits");
+        assert(value <= 0xFF, "B Value exceeds 8 bits");
         this.regB = value & 0xFF;
     }
 
     get C() { return this.regC; }
     set C(value: number) {
-        console.assert(value <= 0xFF, "C Value exceeds 8 bits");
+        assert(value <= 0xFF, "C Value exceeds 8 bits");
         this.regC = value & 0xFF;
     }
 
     get D() { return this.regD; }
     set D(value: number) {
-        console.assert(value <= 0xFF, "D Value exceeds 8 bits");
+        assert(value <= 0xFF, "D Value exceeds 8 bits");
         this.regD = value & 0xFF;
     }
 
     get E() { return this.regE; }
     set E(value: number) {
-        console.assert(value <= 0xFF, "E Value exceeds 8 bits");
+        assert(value <= 0xFF, "E Value exceeds 8 bits");
         this.regE = value & 0xFF;
     }
 
     get H() { return this.regH; }
     set H(value: number) {
-        console.assert(value <= 0xFF, "H Value exceeds 8 bits");
+        assert(value <= 0xFF, "H Value exceeds 8 bits");
         this.regH = value & 0xFF;
     }
 
     get L() { return this.regL; }
     set L(value: number) {
-        console.assert(value <= 0xFF, "L Value exceeds 8 bits");
+        assert(value <= 0xFF, "L Value exceeds 8 bits");
         this.regL = value & 0xFF;
     }
 
     get AF() { return ((this.A << 8) | this.flags); }
     set AF(value: number) {
-        console.assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
+        assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
         this.A = (value & 0xFF00) >> 8;
         this.flags = value & 0x00FF;
     }
 
     get BC() { return ((this.B << 8) | this.C); }
     set BC(value: number) {
-        console.assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
+        assert(value <= 0xFFFF, "BC Value exceeds 16 bits");
         this.B = (value & 0xFF00) >> 8;
         this.C = value & 0x00FF;
     }
 
     get DE() { return ((this.D << 8) | this.E); }
     set DE(value: number) {
-        console.assert(value <= 0xFFFF, "DE Value exceeds 16 bits");
+        assert(value <= 0xFFFF, "DE Value exceeds 16 bits");
         this.D = (value & 0xFF00) >> 8;
         this.E = value & 0x00FF;
     }
 
     get HL() { return ((this.H << 8) | this.L); }
     set HL(value: number) {
-        console.assert(value <= 0xFFFF, "HL Value exceeds 16 bits");
+        assert(value <= 0xFFFF, "HL Value exceeds 16 bits");
         this.H = (value & 0xFF00) >> 8;
         this.L = value & 0x00FF;
     }

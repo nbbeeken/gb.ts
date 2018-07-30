@@ -16,3 +16,7 @@ td, tr, th {
     border: 1px;
     border-style: solid;
 }
+
+body {
+    background-color: bisque;
+}

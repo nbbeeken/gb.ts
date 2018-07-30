@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
-		"eslint.enable": false
+		"tslint.autoFixOnSave": true,
+		"tslint.alwaysShowRuleFailuresAsWarnings": true
 	}
 }
