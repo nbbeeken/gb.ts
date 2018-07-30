@@ -545,6 +545,37 @@ const printfuncs = [
             array.push(format(text, num, num, num, num))
         }
         return array;
+    },
+    function jump16bitCondition() {
+        const array = [];
+        const text = `
+        new Instruction(
+            "jump to nn based on condition",
+            0b11_%s_010,
+            "jp cc, nn", Z80InstructionType.JUMPCOMMD, 3,
+
+            (cpu) => {
+                %s {
+                    cpu.registers.PC = cpu.ram.read16(cpu.registers.PC + 1);
+                }
+            },
+        ),`;
+        const conditions = {
+            '000': `if (cpu.registers.zero)`,
+            '001': `if (cpu.registers.zero)`,
+            '010': `if (cpu.registers.carry)`,
+            '011': `if (cpu.registers.carry)`,
+            // '100': // Not supported in GB // Parity Odd
+            // '101': // Not supported in GB // Parity Even
+            // TODO: I believe the below are not supported but less sure...
+            // '110': // Sign positive,
+            // '111': // Sign Negative,
+        };
+        for (const num in conditions) {
+            const ifstmt = conditions[num];
+            array.push(format(text, num, ifstmt))
+        }
+        return array;
     }
 ];
 

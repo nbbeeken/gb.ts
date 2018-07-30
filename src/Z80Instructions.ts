@@ -198,6 +198,52 @@ const load16bitInstructions = [
     ),
 ];
 
+const jumpInstructions = [
+    new Instruction(
+        "jump to nn (16bit imm.)",
+        0b1100_0011,
+        "jp nn", Z80InstructionType.JUMPCOMMD, 3,
+
+        (cpu) => {
+            cpu.registers.PC = cpu.ram.read16(cpu.registers.PC + 1);
+        },
+    ),
+
+    new Instruction(
+        "jump to address in HL",
+        0b1110_1001,
+        "jp (HL)", Z80InstructionType.JUMPCOMMD, 1,
+
+        (cpu) => {
+            cpu.registers.PC = cpu.registers.HL;
+        },
+    ),
+
+    new Instruction(
+        "jump to offset 8bit imm",
+        0b0001_1000,
+        "jr C, e", Z80InstructionType.JUMPCOMMD, 2,
+
+        (cpu) => {
+            const jloc = cpu.registers.PC + cpu.ram.read8(cpu.registers.PC + 1, true);
+            cpu.registers.PC =  jloc;
+        },
+    ),
+
+    new Instruction(
+        "jump to offset 8bit imm if carry",
+        0b1110_1001,
+        "jr C, e", Z80InstructionType.JUMPCOMMD, 2,
+
+        (cpu) => {
+            if (cpu.registers.carry) {
+                const jloc = cpu.registers.PC + cpu.ram.read8(cpu.registers.PC + 1, true);
+                cpu.registers.PC =  jloc;
+            }
+        },
+    ),
+];
+
 const specialInstructions = [
     new Instruction(
         "nop",
@@ -211,5 +257,6 @@ export const Z80Instructions = [
     ...GeneratedInstructions,
     ...load8bitInstructions,
     ...load16bitInstructions,
+    ...jumpInstructions,
     ...specialInstructions,
 ];

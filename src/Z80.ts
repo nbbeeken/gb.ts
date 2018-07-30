@@ -47,7 +47,8 @@ export default class Z80 {
 
     public execute(data: DataView) {
         const s = new Set<number>();
-        for (let i = 0; i < data.byteLength; i++) {
+        let i = 0;
+        while (i < data.byteLength) {
             let byte: number = 0;
 
             if (data.getUint8(i) === 0xCB) {
@@ -57,24 +58,21 @@ export default class Z80 {
                 byte = data.getUint8(i);
             }
 
-            // if (this.ram.mem[i] === 0xCB) {
-            //     byte = this.ram.mem[i] | this.ram.mem[i + 1];
-            //     i += 1;
-            // } else {
-            //     byte = this.ram.mem[i];
-            // }
             if (byte in this.Z80InstructionsMap) {
-                this.Z80InstructionsMap[byte].fn(this);
+                const instruction: Instruction = this.Z80InstructionsMap[byte];
+                instruction.fn(this);
+                i += instruction.pcSteps;
             } else {
                 s.add(byte);
                 console.log("cpu      :", "Missing 0x" + byte.toString(16));
+                i++;
             }
         }
 
         console.log("cpu      :", `missing ${s.size} instructions`);
         const a = [];
         for (const n of s) {
-            a.push("0b" + padStart(n.toString(2), 8, "0"));
+            a.push("0x" + padStart(n.toString(16), 2, "0"));
         }
         console.log("cpu      :\n", a.join("\n"));
     }

@@ -27,7 +27,7 @@ function main() {
         console.log(data);
         const ram = new RAM([0]);
         const cpu = new Z80(ram);
-        // cpu.execute(new DataView(data));
+        cpu.execute(new DataView(data));
     });
 }
 
