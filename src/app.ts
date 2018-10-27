@@ -31,7 +31,7 @@ function main() {
     });
 }
 
-const isBrowser = new Function("try {return this===window;}catch(e){ return false;}");
+const isBrowser = new Function("try {return this===window;}catch(e){return false;}");
 const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 if (isNode()) {
